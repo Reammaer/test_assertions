@@ -8,7 +8,7 @@ vlib work
 
 vlog -work work ../tb/tb.sv
 
-vsim -novopt -t 1ns work.tb
+vsim -novopt -t 1ns -sv_seed random work.tb
 
 add wave -divider "Top-level signals"
 add wave -radix unsigned tb/*
