@@ -92,7 +92,7 @@ module tb;
     // Check b is stable during a
     property b_stable(min, max);
         disable iff (reset)
-        $rose(a) |-> ##[min:max] $stable(b) until_with $fell(b);
+        $rose(a) |-> ##[min:max] $stable(b) until_with $fell(a);
     endproperty:b_stable
     A1_IS_STABLE: assert property(b_stable(MIN_DELAY, MAX_DELAY)) else begin
         `uvm_fatal("A1_IS_STABLE", $sformatf("Assertion is failing in time=%0tns", $time))
