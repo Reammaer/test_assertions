@@ -68,17 +68,19 @@ module tb;
         $rose(a) |-> ##[min:max] $rose(b);
     endproperty: b_raising
     A1_RAISE: assert property(b_raising(MIN_DELAY, MAX_DELAY)) else begin
-        `uvm_fatal("A1_RAISE", $sformatf("Assertion is failing in time=%0tns", $time))
+        `uvm_error("A1_RAISE", $sformatf("Assertion is failing in time=%0tns", $time))
     end
+    A1_RAISE_CV: cover property(b_raising(MIN_DELAY, MAX_DELAY));
 
     // Check a's falling edge
     property b_fallins;
         disable iff (reset)
-        $fell(b) |-> $fell(b);
+        $fell(a) |-> $fell(b);
     endproperty: b_fallins
     A1_FALL: assert property(b_fallins) else begin
-        `uvm_fatal("A1_FALL", $sformatf("Assertion is failing in time=%0tns", $time))
+        `uvm_error("A1_FALL", $sformatf("Assertion is failing in time=%0tns", $time))
     end
+    A1_FALL_CV: cover property(b_fallins);
 
     // Check X or Z states
     property a_b_x_z_states;
@@ -86,8 +88,9 @@ module tb;
         $rose(a) |-> !$isunknown(b) until_with $fell(a);
     endproperty: a_b_x_z_states
     A1_IS_UNKNOWN: assert property(a_b_x_z_states) else begin
-        `uvm_fatal("A1_IS_UNKNOWN", $sformatf("Assertion is failing in time=%0tns", $time))
+        `uvm_error("A1_IS_UNKNOWN", $sformatf("Assertion is failing in time=%0tns", $time))
     end
+    A1_IS_UNKNOWN_CV: cover property(a_b_x_z_states);
 
     // Check b is stable during a
     property b_stable(min, max);
@@ -95,7 +98,8 @@ module tb;
         $rose(a) |-> ##[min:max] $stable(b) until_with $fell(a);
     endproperty:b_stable
     A1_IS_STABLE: assert property(b_stable(MIN_DELAY, MAX_DELAY)) else begin
-        `uvm_fatal("A1_IS_STABLE", $sformatf("Assertion is failing in time=%0tns", $time))
+        `uvm_error("A1_IS_STABLE", $sformatf("Assertion is failing in time=%0tns", $time))
     end
+    A1_IS_STABLE_CV: cover property(b_stable(MIN_DELAY, MAX_DELAY));
 
 endmodule: tb
