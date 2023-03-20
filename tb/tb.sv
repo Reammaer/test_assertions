@@ -46,6 +46,7 @@ module tb;
     // Test assert 1
     logic a;
     logic b;
+    logic c;
     initial begin
         forever begin
             a = 0;
@@ -53,13 +54,21 @@ module tb;
             #($urandom_range(100, 1000));
             @(posedge clk)
             a = 1;
+            c = 1;
             wait_n_cycles($urandom_range(MIN_DELAY+1,MAX_DELAY+1));
             b = 1;
             #($urandom_range(100, 1000));
             a = 0;
             b = 0; 
+            c = 0;
             #($urandom_range(1000, 3000));
         end
+    end
+
+    initial begin
+        $assertoff();
+        #1000;
+        $asserton();
     end
 
     // Check b's raising edge
@@ -101,5 +110,23 @@ module tb;
         `uvm_error("A1_IS_STABLE", $sformatf("Assertion is failing in time=%0tns", $time))
     end
     A1_IS_STABLE_CV: cover property(b_stable(MIN_DELAY, MAX_DELAY));
+
+    // Check a and b always not X or Z
+    property a_b_x_z_always_states;
+        ##[*] ( !$isunknown(a) && !$isunknown(b) );
+    endproperty: a_b_x_z_always_states
+    A1_A_B_UNKNOWN: assert property(a_b_x_z_always_states) else begin
+        `uvm_error("A1_A_B_UNKONOWN", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
+    A1_A_B_UNKNOWN_CV: cover property(a_b_x_z_always_states);
+
+    // Implies operation
+    property a_b_c_implies(min, max);
+        a |-> ##[min:max] b implies c;
+    endproperty: a_b_c_implies
+    A_B_C_IMPLIES: assert property(a_b_c_implies(MIN_DELAY, MAX_DELAY)) begin
+        `uvm_error("A_B_C_IMPLIES", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
+    A_B_C_IMPLIES_CV: cover property(a_b_c_implies(MIN_DELAY, MAX_DELAY));
 
 endmodule: tb
