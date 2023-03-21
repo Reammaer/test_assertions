@@ -30,7 +30,6 @@ add wave tb/A1_IS_STABLE_CV
 add wave tb/A1_A_B_UNKNOWN
 add wave tb/A1_A_B_UNKNOWN_CV
 #
-add wave tb/A_B_C_IMPLIES
-add wave tb/A_B_C_IMPLIES_CV
+add wave tb/C_D_E_IMPLIES
 
 run 10us

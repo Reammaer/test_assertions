@@ -46,7 +46,6 @@ module tb;
     // Test assert 1
     logic a;
     logic b;
-    logic c;
     initial begin
         forever begin
             a = 0;
@@ -54,13 +53,11 @@ module tb;
             #($urandom_range(100, 1000));
             @(posedge clk)
             a = 1;
-            c = 1;
             wait_n_cycles($urandom_range(MIN_DELAY+1,MAX_DELAY+1));
             b = 1;
             #($urandom_range(100, 1000));
             a = 0;
             b = 0; 
-            c = 0;
             #($urandom_range(1000, 3000));
         end
     end
@@ -120,13 +117,36 @@ module tb;
     end
     A1_A_B_UNKNOWN_CV: cover property(a_b_x_z_always_states);
 
-    // Implies operation
-    property a_b_c_implies(min, max);
-        a |-> ##[min:max] b implies c;
-    endproperty: a_b_c_implies
-    A_B_C_IMPLIES: assert property(a_b_c_implies(MIN_DELAY, MAX_DELAY)) begin
-        `uvm_error("A_B_C_IMPLIES", $sformatf("Assertion is failing in time=%0tns", $time))
+
+    // Working with implies
+    logic c;
+    logic d;
+    logic e;
+    initial begin
+        c = 0;
+        d = 0;
+        e = 0;
+        forever begin
+            #2000;
+            @(posedge clk);
+            c = 1;
+            e = 1;
+            @(posedge clk);
+            c = 0;
+            e = 1;
+            d = 1;
+            @(posedge clk);
+            d = 0;
+            e = 0;
+        end
     end
-    A_B_C_IMPLIES_CV: cover property(a_b_c_implies(MIN_DELAY, MAX_DELAY));
+
+    // Implies operation
+    property c_d_e_implies;
+       c ##1 d implies e;
+    endproperty: c_d_e_implies
+    C_D_E_IMPLIES: assert property(c_d_e_implies) begin
+        `uvm_error("C_D_E_IMPLIES", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
 
 endmodule: tb
