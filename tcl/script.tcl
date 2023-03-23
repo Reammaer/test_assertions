@@ -39,4 +39,10 @@ add wave tb/K_L_M_N_IMPLIES_CV
 add wave tb/A1_WEAK
 add wave tb/A1_STRONG
 
+add wave tb/A_UNTIL_WITH
+add wave tb/A_UNTIL_WITH_CV
+
+add wave tb/A_REQ_NO_REQ
+add wave tb/A_REQ_NO_REQ_CV
+
 run 10us

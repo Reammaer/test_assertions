@@ -243,7 +243,48 @@ module tb;
 
     initial A_RESET_CONJ: assume property(reset_conj[*10] #=# always !reset_conj);
 
+    // Unbounded Lineat Temporal Operators
 
     // Until_with
+    // When req becomes true it must hold until and including gnt.
+    // In addition, gnt must happen
+    bit gnt;
+    bit req;
+    initial begin
+        #3000;
+        req = 1;
+        #1000;
+        gnt = 0;
+        #5000;
+        gnt = 0;
+        req = 1;
+    end
 
+    property req_until_with_gnt;
+        !req ##1 req |-> req s_until_with gnt;
+    endproperty: req_until_with_gnt
+
+    A_UNTIL_WITH: assert property(req_until_with_gnt) else begin
+        `uvm_error("A_UNTIL_WITH", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
+    A_UNTIL_WITH_CV: cover property(req_until_with_gnt);
+
+
+    // Bounded Lineat Temporal Operators
+
+    // The clock ticks at least once and e1 happens at each clocl tick
+    // initial A_E1: assert property(
+    //     s_nexttime[0] always e1);
+
+    // There cannot be two consecutive requests where
+    // req1 is a boolean expression.
+    bit req1;
+    initial begin
+        #3000;
+        req1 = 1;
+        @(posedge clk)
+        req1 = 0;
+    end
+    A_REQ_NO_REQ: assert property(req1 implies nexttime !req1);
+    A_REQ_NO_REQ_CV: cover property(req1 implies nexttime !req1);
 endmodule: tb
