@@ -13,5 +13,9 @@ vsim -novopt -t 1ns -sv_seed random -assertcover work.tb_2
 add wave -divider "Top-level signals"
 add wave -radix unsigned tb_2/*
 
+## Asseerts
+add wave tb_2/EN_READ_WRITE_THROUGHTOUT
+add wave tb_2/EN_READ_WRITE_THROUGHTOUT_CV
 
-run 10us
+
+run 3us
