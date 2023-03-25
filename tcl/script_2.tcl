@@ -23,10 +23,25 @@ add wave tb_2/REQ_DONE_READY
 add wave tb_2/REQ_DONE_READY_CV
 
 add wave -divider "GOTO 2"
-# add wave tb_2/START_REQ_EN
-# add wave tb_2/START_REQ_EN_CV
+add wave tb_2/START_REQ_EN
+add wave tb_2/START_REQ_EN_CV
 add wave tb_2/START_ENV
 add wave tb_2/START_ENV_CV
 
+add wave -divider "Nonconsecutive Repetition"
+add wave tb_2/clk
+add wave tb_2/start_t
+add wave tb_2/end_t
+add wave tb_2/sent
+add wave tb_2/START_END_SENT
+add wave tb_2/START_END_SENT_CV
+
+add wave -divider "Intersection"
+add wave tb_2/clk
+add wave tb_2/command;
+add wave tb_2/write_complete;
+add wave tb_2/read_complete;
+add wave tb_2/INTERSECTION
+add wave tb_2/INTERSECTION_CV
 
 run 3us
