@@ -229,4 +229,32 @@ module tb_2;
     end
     INTERSECTION_CV: cover property(intersection);
 
+    // If acknowledgement "ack" is received after "req", "ready" should
+    // be asserted simultaniously with the acknowledgement receipt.
+    bit ack, req3, ready3;
+    initial begin
+        #1000;
+        req3 = 1;
+        wait_n_cycles(2);
+        req3 = 0;
+        wait_n_cycles(10);
+        ack = 1;
+        ready3 = 1;
+        wait_n_cycles(1);
+        ack = 0;
+        ready3 = 0;
+    end
+    // property intersection_ack;
+    //     req3 ##1 ack[->1] |-> ready3;
+    // endproperty: intersection_ack
+            // ***** With modification ***** //
+    property intersection_ack;  // Doesn't work properly in Questa
+        (req3 ##1 ack[->1]) intersect 1[*2:4]) |-> ready3;
+    endproperty: intersection_ack    
+
+    INTERSECTION_ACK: assert property(intersection_ack) else begin
+       `uvm_error("INTERSECTION_ACK", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
+    INTERSECTION_ACK_CV: cover property(intersection_ack);
+
 endmodule: tb_2

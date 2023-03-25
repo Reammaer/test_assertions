@@ -44,4 +44,12 @@ add wave tb_2/read_complete;
 add wave tb_2/INTERSECTION
 add wave tb_2/INTERSECTION_CV
 
+add wave -divider "Intersection ACK"
+add wave tb_2/clk
+add wave tb_2/req3;
+add wave tb_2/ack;
+add wave tb_2/ready3;
+add wave tb_2/INTERSECTION_ACK
+add wave tb_2/INTERSECTION_ACK_CV
+
 run 3us
