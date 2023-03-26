@@ -249,12 +249,41 @@ module tb_2;
     // endproperty: intersection_ack
             // ***** With modification ***** //
     property intersection_ack;  // Doesn't work properly in Questa
-        (req3 ##1 ack[->1]) intersect 1[*2:4]) |-> ready3;
+        (req3 ##1 ack[->1]) intersect 1[*2:4] |-> ready3;
     endproperty: intersection_ack    
 
     INTERSECTION_ACK: assert property(intersection_ack) else begin
        `uvm_error("INTERSECTION_ACK", $sformatf("Assertion is failing in time=%0tns", $time))
     end
     INTERSECTION_ACK_CV: cover property(intersection_ack);
+
+    // Sequence Containment
+    // Ther should be at least one "read" request between
+    // two "write" requests
+    bit write_req;
+    bit read_req;
+    initial begin
+        #1000;
+        wait_n_cycles(1);
+        write_req = 1;
+        wait_n_cycles(1);
+        write_req = 0;
+        wait_n_cycles(1);
+        read_req = 1;
+        wait_n_cycles(1);
+        read_req = 0;
+        wait_n_cycles(1);
+        write_req = 1;
+        wait_n_cycles(1);
+        write_req = 0;
+    end  
+
+    property write_read_containment;
+        write_req |=> (read_req ##1 1) within write_req[->1];
+    endproperty: write_read_containment
+    WRITE_READ_CONTAINMENT: assert property(write_read_containment) else begin
+        `uvm_error("WRITE_READ_CONTAINMENT", $sformatf("Assertion is failing in time=%0tns", $time))
+    end
+    WRITE_READ_CONTAINMENT_CV: cover property(write_read_containment);
 
 endmodule: tb_2

@@ -52,4 +52,11 @@ add wave tb_2/ready3;
 add wave tb_2/INTERSECTION_ACK
 add wave tb_2/INTERSECTION_ACK_CV
 
+add wave -divider "Sequence Containment"
+add wave tb_2/clk
+add wave tb_2/write_req
+add wave tb_2/read_req
+add wave tb_2/WRITE_READ_CONTAINMENT
+add wave tb_2/WRITE_READ_CONTAINMENT_CV
+
 run 3us
